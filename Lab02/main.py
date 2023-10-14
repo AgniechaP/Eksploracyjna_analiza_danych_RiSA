@@ -1,16 +1,9 @@
-# This is a sample Python script.
+# Returning a tuple - original behaviour of sqlite in Python
+import sqlite3
+conn = sqlite3.connect("Chinook_Sqlite.sqlite")  # połączenie do bazy danych - pliku
+c = conn.cursor()
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+for row in c.execute('SELECT Invoice.InvoiceId, Invoice.CustomerId, Invoice.BillingCity, Invoice.Total FROM Invoice WHERE Invoice.BillingCountry = "USA" ORDER BY Invoice.BillingCity desc'):
+    print(row)
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+conn.close()
