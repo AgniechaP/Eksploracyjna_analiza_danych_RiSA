@@ -3,6 +3,7 @@ import config
 import requests
 import json
 import pandas as pd
+import matplotlib.pyplot as plt
 
 url = "https://api.openweathermap.org/data/2.5/onecall"
 api_key = config.api_key
@@ -29,3 +30,5 @@ for line in bydgoszcz_weather_json["hourly"]:
 
 df = pd.DataFrame(data=weather_dict, index=dt)
 print(df)
+df.plot.line()
+plt.show()
