@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 url = "https://api.openweathermap.org/data/2.5/onecall"
 api_key = config.api_key
 # latitude and longitude of Bydgoszcz
-latitude = 53.123482
-longitude = 18.008438
+latitude = 52.409538
+longitude = 16.931992
 # &units=metric - changing temperature from Fahrenheit to Celsius
 req = requests.get(f"{url}?lat={latitude}&lon={longitude}&exclude=minutely&appid={api_key}&units=metric")
 # print(req.text)
@@ -22,7 +22,7 @@ weather_dict = {
 }
 dt = []
 for line in bydgoszcz_weather_json["hourly"]:
-    dt.append(pd.to_datetime(line['dt'], unit='s'))
+    dt.append(pd.to_datetime(line['dt']+7200, unit='s'))
     weather_dict['temp'].append((line['temp']))
     weather_dict['feels_like'].append((line['feels_like']))
     weather_dict['humidity'].append((line['humidity']))
@@ -32,3 +32,7 @@ df = pd.DataFrame(data=weather_dict, index=dt)
 print(df)
 df.plot.line()
 plt.show()
+
+# zamiast json.loads mozna uzyc df = pd.DataFrame(req.json())
+
+# df_krzychu=pd.DataFrame(index=np.arange(len(bydgoszcz_weather_json['hourly'])),data=bydgoszcz_weather_json['hourly'],columns=["temp", "feels_like", "humidity","wind_speed","dt"])

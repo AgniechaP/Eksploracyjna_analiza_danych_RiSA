@@ -10,8 +10,12 @@ conn.row_factory = dict_factory
 # for row in conn.execute('SELECT Album.Title AS title, Artist.Name AS artist FROM Album LEFT JOIN Artist ON Artist.ArtistId = Album.ArtistId'):
 #     print(row)
 
-for row in conn.execute('SELECT  Artist.Name AS artist, Album.Title AS title FROM Artist LEFT JOIN Album ON Artist.ArtistId = Album.ArtistId'):
+i = 0
+# for row in conn.execute('SELECT  Artist.Name AS artist, Album.Title AS title FROM Artist LEFT JOIN Album ON Artist.ArtistId = Album.ArtistId'):
+for row in conn.execute('SELECT  Artist.Name AS artist, Album.Title AS title FROM Album LEFT JOIN Artist ON Artist.ArtistId = Album.ArtistId'):
     print(row)
+    i+=1
+print(i)
 
 conn.close()
 

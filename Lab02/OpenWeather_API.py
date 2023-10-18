@@ -9,8 +9,8 @@ import json
 
 url = "https://api.openweathermap.org/data/2.5/onecall"
 api_key = config.api_key
-latitude = 37.2431
-longitude = -115.7930
+latitude = 52.409538
+longitude = 16.931992
 req = requests.get(f"{url}?lat={latitude}&lon={longitude}&exclude=minutely&appid={api_key}")
 print(req.text)
 
