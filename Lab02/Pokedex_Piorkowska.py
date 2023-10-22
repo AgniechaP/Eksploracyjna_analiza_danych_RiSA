@@ -7,8 +7,6 @@ pokedex_history = pd.read_hdf('pokedex_history.hdf5')
 
 
 def collect_data_of_pokemons(data):
-    # Data grabbed so far - meeting_date and name
-
     pokemon_names = data['name'].str.lower()
     # print(pokemon_names)
 
@@ -78,16 +76,42 @@ def collect_data_of_pokemons(data):
 # attacked power = defense + special_defense + hp
 def attack_against(attacker: str, attacked: str, database: pd.DataFrame):
     attacker_row = database.loc[database['Name'] == attacker]
-    if not attacker_row.empty:
-        # Get the 'hp' value for the attacker
-        attacker_attack = attacker_row['attack'].values[0]
-        print(f"{attacker}'s attack is {attacker_attack}")
+    attacked_row = database.loc[database['Name'] == attacked]
+    if attacker_row.empty or attacked_row.empty:
+        return None
+
+    attacked_type_1 = attacked_row.iloc[0]['type_1']
+    attacked_type_2 = attacked_row.iloc[0]['type_2']
+
+    attacker_attack = attacker_row['attack'].values[0]
+    attacker_special_attack = attacker_row['special-attack'].values[0]
+    attacker_against_type_1 = attacker_row[f'against_{attacked_type_1}'].values[0]
+    attacker_hp = attacker_row['hp'].values[0]
+    if attacked_row.iloc[0]['type_2'] is not None:
+        attacker_against_type_2 = attacker_row[f'against_{attacked_type_2}'].values[0]
+        attacker_sum = attacker_attack + attacker_special_attack + attacker_against_type_1 + attacker_against_type_2 + attacker_hp
     else:
-        print(f"{attacker} not found in the database")
+        attacker_sum = attacker_attack + attacker_special_attack + attacker_against_type_1 + attacker_hp
+
+    attacked_defense = attacked_row['defense'].values[0]
+    attacked_special_defense = attacked_row['special-defense'].values[0]
+    attacked_hp = attacked_row['hp'].values[0]
+    attacked_sum = attacked_defense + attacked_special_defense + attacked_hp
+
+    if attacker_sum > attacked_sum:
+        print(f"{attacker} points: {attacker_sum}, {attacked} points: {attacked_sum}, {attacker} wins")
+    elif attacked_sum > attacker_sum:
+        print(f"{attacker} points: {attacker_sum}, {attacked} points: {attacked_sum}, {attacked} wins")
+    elif attacked_sum == attacker_sum:
+        print(f"{attacker} points: {attacker_sum}, {attacked} points: {attacked_sum}, It's a draw!")
+
 
 
 def main():
-    attack_against('comfey', 'machop', collect_data_of_pokemons(pokedex_history))
+    attack_against('klang', 'wingull', collect_data_of_pokemons(pokedex_history))
+
+    # Show whole data of met pokemons
+    # print(collect_data_of_pokemons(pokedex_history))
 
 
 if __name__ == "__main__":
