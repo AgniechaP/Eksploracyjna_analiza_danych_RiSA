@@ -3,6 +3,7 @@ import numpy as np
 import requests
 import json
 import random
+import pandas as pd
 
 
 def zadanie_1():
@@ -108,12 +109,25 @@ def zadanie_3_and_4():
     plt.show()
     print(male_survivors)
 
+def zadanie_5():
+    df = pd.read_csv("russia2020_vote.csv")
+    df["Relative_votes_for"] = df["yes"]/df["given"]
+    pd.set_option('display.max_columns', None)
+    fig, ax = plt.subplots(1, 2)
+    ax[0].hist(df["Relative_votes_for"], facecolor='b')
+    ax[1].hist(df["Relative_votes_for"], 100, facecolor='g')
+    plt.show()
+    # print(df)
+    # Anomalie - wieksza wrazliwosc na przechwycenie nietypowych wartosci i zapisanie ich w osobnych binach.
+    # Te fluktuacje wybijaja sie poza histogram przypominajacy rozklad normalny i wydaja sie bardziej znaczace
+    # niz w rzeczywistosci sa 
+
 
 def main():
     # zadanie_1()
     # zadanie_2()
-    zadanie_3_and_4()
-
+    # zadanie_3_and_4()
+    zadanie_5()
 
 if __name__ == "__main__":
     main()
