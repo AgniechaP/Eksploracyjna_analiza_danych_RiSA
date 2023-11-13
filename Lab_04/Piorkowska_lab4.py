@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+# %matplotlib wiget
 
 # Wczytaj dane temperatur i wyznacz średnią temperaturę, minimalną i maksymalną temperaturę w danym regionie.
 def zadanie_1():
@@ -22,8 +24,10 @@ def pivot_table():
     df = data.drop(columns=['Day']).pivot_table(columns='Region', index=['Year', 'Month'],
                                                 aggfunc=['min', 'max', 'mean'], values='AvgTemperature')
     pd.set_option('display.max_columns', None)
-    print(df)
-    df.to_csv("pivot_table_test.csv")
+
+    min_Afrika = df.loc[:,(['min', 'max'], 'Africa')]
+    print(min_Afrika)
+    # df.to_csv("pivot_table_test.csv")
 
 def zadanie_2():
     original_data = pd.read_csv("city_temperature.csv", low_memory=False)
@@ -55,6 +59,49 @@ def zadanie_2():
     plt.show()
 
 def zadanie_3():
+    ecg = pd.read_csv('raw_ecg.csv')
+    # ecg = ecg.iloc[:,1]
+    beats = pd.read_csv('ecg_beats.csv')
+
+    # window_start = -0.55
+    # window_end = 0.4
+    # sample_rate = 500
+    # range = np.arange(-.55*500, .4*500)
+    # time_vector = np.linspace(window_start, window_end, int((window_end - window_start) * sample_rate) + 1)
+    #
+    #
+    # segments = ecg.values[(range[:, np.newaxis] + beats['BeatTimestamp'].values[1:-1]).astype(int)]
+    # average_signal = np.mean(segments, axis=1)
+    #
+    # plt.figure()
+    # plt.plot(average_signal[:,1])
+    # # plt.plot(beats['BeatTimestamp'])
+    # plt.show()
+    #
+    # print(average_signal)
+
+    # Create a time window around each event (e.g., -200 ms to 200 ms)
+    window_start = -0.2  # Start 200 ms before the event
+    window_end = 0.2  # End 200 ms after the event
+
+    # Create a time vector representing the time points for the analysis
+    sample_rate = 500  # Example sampling rate (1 kHz)
+    time_vector = np.linspace(window_start, window_end, int((window_end - window_start) * sample_rate) + 1)
+    range = np.arange(-.55 * 500, .4 * 500)
+    # Use NumPy vectorized operations to extract segments around each event
+    segments = ecg.values[(range[:, np.newaxis] + beats['BeatTimestamp'].values[1:-1]).astype(int)]
+
+    # Compute the average signal across all segments using vectorized operations
+    average_signal = np.mean(segments, axis=1)
+    print(average_signal)
+    plt.figure()
+    plt.plot(average_signal[:,1])
+    # # plt.plot(beats['BeatTimestamp'])
+    plt.show()
+
+
+
+def zadanie_4():
     titanic_data = pd.read_csv("titanic_train.csv", low_memory=False)
     # Używając grupowania lub tabeli przestawnej spróbuj stworzyć dataset zawierający informację o liczbie osób które
     # przeżyły katastrofę z podziałem na płeć i klasę w której podróżowały
@@ -85,11 +132,13 @@ def zadanie_3():
 
 
     print(percentage_survived)
+    print(amount_of_people_by_sex_and_class)
 def main():
     # zadanie_1()
     # zadanie_1_2()
     # pivot_table()
     # zadanie_2()
+    # zadanie_4()
     zadanie_3()
 
 if __name__ == "__main__":
